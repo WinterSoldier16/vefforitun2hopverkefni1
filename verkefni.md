@@ -3,10 +3,10 @@
 
 ## Töflur
 
-[] - Matseðill
-[] - Karfa
-[] - Pöntun
-[] - User
+[x] - Matseðill
+[x] - Karfa
+[x] - Pöntun
+[x] - User
 
 ## Vefþjónustur
 
