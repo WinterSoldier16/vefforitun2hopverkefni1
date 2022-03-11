@@ -10,7 +10,7 @@ import {
   findById,
   findAllUsers,
   createUser,
-} from './users.js';
+} from './lib/users.js';
 
 dotenv.config();
 
