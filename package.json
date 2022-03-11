@@ -1,0 +1,28 @@
+{
+  "name": "vefforitun2hopverkefni1",
+  "version": "1.0.0",
+  "description": "[Kynning í fyrirlestri](https://youtu.be/W0k01_KRE4I).",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules' dotenv -e .env.test -- jest ./*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WinterSoldier16/vefforitun2hopverkefni1.git"
+  },
+  "author": "Veturlidi & Bjarki",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WinterSoldier16/vefforitun2hopverkefni1/issues"
+  },
+  "homepage": "https://github.com/WinterSoldier16/vefforitun2hopverkefni1#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.5.2",
+    "passport-jwt": "^4.0.0",
+    "pg": "^8.7.3"
+  }
+}
