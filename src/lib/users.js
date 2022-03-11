@@ -96,7 +96,7 @@ export async function findAllUsers() {
     try {
         const result = await query(q);
 
-        return result;
+        return result.rows;
     } catch (e) {
         console.error('Gat ekki fundið alla notendur');
     }
