@@ -69,6 +69,27 @@ export async function findById(id) {
   return null;
 }
 
+export async function createUser(name, username, password, admin) {
+    // Geymum hashað password!
+    const hashedPassword = await bcrypt.hash(password, 11);
+  
+    const q = `
+      INSERT INTO
+        users (name, username, password, admin)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *
+    `;
+  
+    try {
+      const result = await query(q, [name, username, hashedPassword, admin]);
+      return result.rows[0];
+    } catch (e) {
+      console.error('Gat ekki búið til notanda');
+    }
+  
+    return null;
+  }
+
 export async function findAllUsers() {
     const q = 'SELECT * FROM USERS';
 
