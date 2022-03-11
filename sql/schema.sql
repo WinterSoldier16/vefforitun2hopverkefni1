@@ -50,6 +50,3 @@ CREATE TABLE stadapontun (
   stodurpontunar VARCHAR(8), 
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
-
-
