@@ -1,5 +1,6 @@
 CREATE TABLE users (
   id serial primary key,
+  name varchar(64) NOT NULL,
   username character varying(255) NOT NULL,
   password character varying(255) NOT NULL,
   admin boolean
@@ -29,20 +30,23 @@ CREATE TABLE karfa (
 
 CREATE TABLE linurkorfu (
   id serial primary key,
-  idkarfa uuid NOT NULL FOREIGN KEY (idkarfa) REFERENCES karfa (id),
-  fjoldivara INTEGER CHECK (fjoldivara > 0)
+  idkarfa uuid NOT NULL,
+  fjoldivara INTEGER CHECK (fjoldivara > 0),
+  constraint idkarfa FOREIGN KEY (idkarfa) REFERENCES karfa (id)
 );
 
 CREATE TABLE pontun (
   id uuid primary key,
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  name VARCHAR(64) NOT NULL,
+  name VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE linurpontun (
-  idvara INTEGER NOT NULL FOREIGN KEY (idvara) REFERENCES vorur (id),
-  idkarfa uuid NOT NULL FOREIGN KEY (idkarfa) REFERENCES karfa (id),
-  fjvara INTEGER CHECK (fjoldivara > 0)
+  idvara INTEGER NOT NULL,
+  idkarfa uuid NOT NULL,
+  fjvara INTEGER CHECK (fjvara > 0),
+  constraint idvara FOREIGN KEY (idvara) REFERENCES vorur (id),
+  constraint idkarfa FOREIGN KEY (idkarfa) REFERENCES karfa (id)
 );
 
 CREATE TABLE stadapontun (

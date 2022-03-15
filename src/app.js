@@ -1,10 +1,10 @@
 import express from 'express';
-//import passport from 'passport';
+import passport from 'passport';
 import dotenv from 'dotenv';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import jwt from 'jsonwebtoken';
-import { router as apiRouter } from './api/index.js';
-import passport from './auth/passport.js';
+//import { router as apiRouter } from './api/index.js';
+//import passport from './auth/passport.js';
 
 
 import {
@@ -20,7 +20,7 @@ dotenv.config();
 const {
   PORT: port = 3000,
   JWT_SECRET: jwtSecret,
-  TOKEN_LIFETIME: tokenLifetime = 20,
+  TOKEN_LIFETIME: tokenLifetime = 3600, //TODO: Make this number slightly smaller
   DATABASE_URL: databaseUrl,
 } = process.env;
 
@@ -110,7 +110,7 @@ app.get('/admin', requireAuthentication, (req, res) => {
   res.json({ data: 'top secret' });
 });
 
-app.get('/users', requireAuthentication, (req, res) => {
+app.get('/users', requireAuthentication, async (req, res) => {
   if (req.user.admin === true) {
     const listOfAllUsers = await findAllUsers();
     return res.json({ listOfAllUsers });
@@ -132,14 +132,15 @@ app.post('/users/register', async (req, res) => {
   return res.json({ data: 'User was not created, please try again with different username' });
 });
 
-app.get('/users/me', async (req, res) => {
+app.get('/users/me', requireAuthentication, async (req, res) => {
+  console.error(req.user.id);
   const audkenni = req.user.id;
   const nafn = req.user.name;
   res.json({ audkenni, nafn });
 });
 
 app.get('/users/:id', requireAuthentication, async (req, res) => {
-  const id = req.params;
+  const { id } = req.params;
   const user = await findById(id);
   if (req.user.admin === true) {
     return res.json(user);
