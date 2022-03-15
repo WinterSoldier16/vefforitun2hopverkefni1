@@ -5,6 +5,7 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 //import { router as apiRouter } from './api/index.js';
 //import passport from './auth/passport.js';
 import { route as userroutes } from './userroutes.js';
+import { vRoute as voruroutes } from './voruroutes.js';
 
 import {
   comparePasswords,
@@ -32,6 +33,7 @@ const app = express();
 // Notum JSON middleware til að geta tekið við JSON frá client
 app.use(express.json());
 app.use(userroutes);
+app.use(voruroutes);
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

@@ -22,8 +22,8 @@
 
 ## Myndir
 
-[] - Finna myndir fyrir verkefnið (jpeg eða png)
-[] - Geyma myndir á Cloudinary eða imgix
+[x] - Finna myndir fyrir verkefnið (jpeg eða png)
+[x] - Geyma myndir á Cloudinary
 
 ## Notendaumsjón
 
@@ -49,3 +49,6 @@
 [] - Dæmi um köll í vefþjónustu m.v. test gögn
 [] - Innskráning fyrir admin stjórnanda ásamt lykilorði
 [] - Nöfn og notendanöfn allra í hóp
+
+## Vandamál
+[] - formdata eða json, POST /menu
