@@ -1,8 +1,11 @@
 import express from 'express';
-import passport from 'passport';
+//import passport from 'passport';
 import dotenv from 'dotenv';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import jwt from 'jsonwebtoken';
+import { router as apiRouter } from './api/index.js';
+import passport from './auth/passport.js';
+
 
 import {
   comparePasswords,
