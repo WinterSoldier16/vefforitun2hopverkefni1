@@ -9,6 +9,8 @@ import {
     findAllUsers,
     createUser,
     updateAdmin,
+    updateEmail,
+    updatePassword,
 } from './lib/users.js';
 
 import { 
@@ -53,19 +55,19 @@ route.get('/users', requireAuthentication, async (req, res) => {
         const listOfAllUsers = await findAllUsers();
         return res.json({ listOfAllUsers });
     }
-    return res.status(401).json({ error: 'Need admin priviliges to view users'})
+    return res.status(401).json({ error: 'Need admin priviliges to view users'});
 });
   
 route.post('/users/register', async (req, res) => {
-    const { name, username, password = '' } = req.body;
+    const { email, username, password = '' } = req.body;
   
-    if (!name || !username || !password) {
+    if (!email || !username || !password) {
        return res.status(401).json({ error: 'Please provide name, username and password' });
     }
-    const createdUser = await createUser(name, username, password, false);
+    const createdUser = await createUser(email, username, password, false);
   
     if (createdUser) {
-       return res.json({ name, username });
+       return res.json({ email, username });
     }
     return res.json({ data: 'User was not created, please try again with different username' });
 });
@@ -75,6 +77,37 @@ route.get('/users/me', requireAuthentication, async (req, res) => {
     const audkenni = req.user.id;
     const nafn = req.user.name;
     res.json({ audkenni, nafn });
+});
+
+route.patch('/users/me', requireAuthentication, async (req, res) => {
+    const { oldEmail, oldPassword, newEmail, newPassword } = req.body;
+
+    const user_id = req.user.id;
+    let user_email = req.user.email;
+    const user_password = req.user.password;
+    //let updatedEmail, updatedPassword;
+    
+    if (newEmail && oldEmail === user_email && newPassword && await comparePasswords(oldPassword, user_password)) {
+        const updatedEmail = await updateEmail(user_id, newEmail);
+        const updatedPassword = await updatePassword(user_id, newPassword);
+        user_email = req.user.email;
+        const passwordChanged = "Password succesfully updated";
+        return res.json({ updatedEmail, passwordChanged });
+    }
+    
+    if (!newEmail && newPassword && await comparePasswords(oldPassword, user_password)) {
+        const updatedPassword = await updatePassword(user_id, newPassword);
+        const passwordChanged = "Password succesfully updated";
+        return res.json({ passwordChanged });
+    }
+
+    if (!newPassword && newEmail && oldEmail === user_email) {
+        const updatedEmail = await updateEmail(user_id, newEmail);
+        user_email = req.user.email;
+        return res.json({ updatedEmail });
+    }
+
+    return res.status(400).json({ data : "Failed to update email or password " });
 });
   
 route.get('/users/:id', requireAuthentication, async (req, res) => {
@@ -94,19 +127,11 @@ route.patch('/users/:id', requireAuthentication, async (req, res) => {
         if (admin_id == id) {
             return res.status(403).json({ error: 'Cannot modify your own admin priviliges' });
         }
-        // const listOfAllUsers = await findAllUsers();
-        // return res.json({ listOfAllUsers });
         const result = await updateAdmin(id);
         const user = await findById(id);
         const username = user.username;
         const admin = user.admin;
         return res.json({ username, admin});
     }
-    return res.status(401).json({ error: 'Need admin priviliges to update admin priviliges'})
-})
-
-// route.patch('/users/me', requireAuthentication, async (req, res) => {
-//     const { name, username, password } = req.body;
-
-//     if
-// })
+    return res.status(401).json({ error: 'Need admin priviliges to update admin priviliges'});
+});

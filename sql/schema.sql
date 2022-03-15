@@ -1,6 +1,6 @@
 CREATE TABLE users (
   id serial primary key,
-  name varchar(64) NOT NULL,
+  email varchar(64) NOT NULL,
   username character varying(255) NOT NULL,
   password character varying(255) NOT NULL,
   admin boolean
@@ -29,10 +29,11 @@ CREATE TABLE karfa (
 );
 
 CREATE TABLE linurkorfu (
-  id serial primary key,
+  idvara INTEGER NOT NULL,
   idkarfa uuid NOT NULL,
   fjoldivara INTEGER CHECK (fjoldivara > 0),
-  constraint idkarfa FOREIGN KEY (idkarfa) REFERENCES karfa (id)
+  constraint idkarfa FOREIGN KEY (idkarfa) REFERENCES karfa (id),
+  constraint idvara FOREIGN KEY (idvara) REFERENCES vorur (id)
 );
 
 CREATE TABLE pontun (
