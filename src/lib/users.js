@@ -101,3 +101,49 @@ export async function findAllUsers() {
         console.error('Gat ekki fundið alla notendur');
     }
 }
+
+export async function updatePassword(id, password) {
+  const hashedPassword = await bcrypt.hash(password, 11);
+  const q = `
+    UPDATE users
+    SET password = $1
+    WHERE id = $2
+    `
+
+  try {
+    const result = await query(q, [hashedPassword, id]);
+    return result.rows[0];
+  } catch (e) {
+    console.error('Gat ekki breytt lykilorði');
+  }
+}
+
+export async function updateUsername(id, username) {
+  const q = `
+  UPDATE users
+  SET username = $1
+  WHERE id = $2
+  `
+
+  try {
+    const result = await query(q, [username, id]);
+    return result.rows[0];
+  } catch (e) {
+    console.error('Gat ekki breytt notandanafni');
+  }
+}
+
+export async function updateAdmin(id) {
+  const q = `
+  UPDATE users
+  SET admin = NOT admin
+  WHERE id = $1
+  `
+
+  try {
+    const result = await query(q, [id]);
+    return result.rows[0];
+  } catch (e) {
+    console.error('Gat ekki uppfært admin réttindi');
+  }
+}

@@ -8,6 +8,7 @@ import {
     findById,
     findAllUsers,
     createUser,
+    updateAdmin,
 } from './lib/users.js';
 
 import { 
@@ -52,7 +53,7 @@ route.get('/users', requireAuthentication, async (req, res) => {
         const listOfAllUsers = await findAllUsers();
         return res.json({ listOfAllUsers });
     }
-    return res.status(401).json({ error: 'Need admin priviliges to'})
+    return res.status(401).json({ error: 'Need admin priviliges to view users'})
 });
   
 route.post('/users/register', async (req, res) => {
@@ -84,3 +85,28 @@ route.get('/users/:id', requireAuthentication, async (req, res) => {
     }
     return res.json({ data: 'Need admin privileges to continue' });
 });
+
+route.patch('/users/:id', requireAuthentication, async (req, res) => {
+    const { id } = req.params;
+    if (req.user.admin === true) {
+        const admin_id = req.user.id;
+        console.error(admin_id);
+        if (admin_id == id) {
+            return res.status(403).json({ error: 'Cannot modify your own admin priviliges' });
+        }
+        // const listOfAllUsers = await findAllUsers();
+        // return res.json({ listOfAllUsers });
+        const result = await updateAdmin(id);
+        const user = await findById(id);
+        const username = user.username;
+        const admin = user.admin;
+        return res.json({ username, admin});
+    }
+    return res.status(401).json({ error: 'Need admin priviliges to update admin priviliges'})
+})
+
+// route.patch('/users/me', requireAuthentication, async (req, res) => {
+//     const { name, username, password } = req.body;
+
+//     if
+// })
