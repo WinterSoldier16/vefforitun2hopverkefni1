@@ -3,11 +3,10 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 
 import {
     findById,
-  } from './lib/users.js';
+} from '../lib/users.js';
 
 const {
     JWT_SECRET: jwtSecret,
-    TOKEN_LIFETIME: tokenLifetime = 3600,
 } = process.env;
 
 if (!jwtSecret) {

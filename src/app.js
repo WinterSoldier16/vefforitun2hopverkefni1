@@ -2,10 +2,9 @@ import express from 'express';
 import passport from 'passport';
 import dotenv from 'dotenv';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import jwt from 'jsonwebtoken';
 //import { router as apiRouter } from './api/index.js';
 //import passport from './auth/passport.js';
-
+import { route as userroutes } from './userroutes.js';
 
 import {
   comparePasswords,
@@ -19,9 +18,8 @@ dotenv.config();
 
 const {
   PORT: port = 3000,
-  JWT_SECRET: jwtSecret,
-  TOKEN_LIFETIME: tokenLifetime = 3600, //TODO: Make this number slightly smaller
   DATABASE_URL: databaseUrl,
+  JWT_SECRET: jwtSecret,
 } = process.env;
 
 if (!jwtSecret || !databaseUrl) {
@@ -33,6 +31,7 @@ const app = express();
 
 // Notum JSON middleware til að geta tekið við JSON frá client
 app.use(express.json());
+app.use(userroutes);
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
