@@ -69,19 +69,19 @@ export async function findById(id) {
   return null;
 }
 
-export async function createUser(name, username, password, admin) {
+export async function createUser(email, username, password, admin) {
     // Geymum hashað password!
     const hashedPassword = await bcrypt.hash(password, 11);
   
     const q = `
       INSERT INTO
-        users (name, username, password, admin)
+        users (email, username, password, admin)
       VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
   
     try {
-      const result = await query(q, [name, username, hashedPassword, admin]);
+      const result = await query(q, [email, username, hashedPassword, admin]);
       return result.rows[0];
     } catch (e) {
       console.error('Gat ekki búið til notanda');
@@ -130,6 +130,21 @@ export async function updateUsername(id, username) {
     return result.rows[0];
   } catch (e) {
     console.error('Gat ekki breytt notandanafni');
+  }
+}
+
+export async function updateEmail(id, email) {
+  const q = `
+  UPDATE users
+  SET email = $1
+  WHERE id = $2
+  `
+
+  try {
+    const result = await query(q, [email, id]);
+    return email;
+  } catch (e) {
+    console.error('Gat ekki breytt netfangi');
   }
 }
 
