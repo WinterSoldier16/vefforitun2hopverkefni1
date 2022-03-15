@@ -16,9 +16,9 @@ CREATE TABLE vorur (
   title VARCHAR(64) NOT NULL UNIQUE,
   price INTEGER NOT NULL,
   description TEXT NOT NULL,
-  image VARCHAR(64) NOT NULL,
-  flokkar INTEGER NOT NULL,
-  constraint flokkar FOREIGN KEY (flokkar) REFERENCES flokkur (id),
+  image VARCHAR(128) NOT NULL,
+  flokkar VARCHAR(32) NOT NULL,
+  constraint flokkar FOREIGN KEY (flokkar) REFERENCES flokkur (title),
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
