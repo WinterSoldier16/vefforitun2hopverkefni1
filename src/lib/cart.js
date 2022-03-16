@@ -60,14 +60,30 @@ export async function getCartByID(uuid) {
 }
 
 export async function getCartTotalPrice(uuid) {
-  const q = 'SELECT idvara FROM linurkorfu WHERE idkarfa = $1';
+  const q = 'SELECT idvara FROM linurkorfu WHERE idkarfa = $1 ORDER BY idvara ASC';
 
   try {
-    var vorur = await query(q, [uuid]);
+    const vorur = await query(q, [uuid]);
+    const q2 = 'SELECT fjoldivara FROM linurkorfu WHERE idkarfa = $1 ORDER BY idvara ASC';
+    try {
+      const fjoldi_vara = await query(q2, [uuid]);
+      let total_price = 0;
+      for (let i = 0; i < vorur.rowCount; i++) {
+        let voruID = vorur.rows[i];
+        let fjoldi_voru = fjoldi_vara[i];
+        const q3 = 'SELECT price FROM vorur WHERE id = $1'
+        try {
+          let price = await query(q3, [voruID])
+          total_price += fjoldi_voru * price.rows[0];
+        } catch (e) {
+          console.error('Gat ekki fundið verð á vöru');
+        }
+      }
+    } catch (e) {
+      console.error('Gat ekki fundið fjölda vara');
+    }
   } catch (e) {
     console.error('Gat ekki fundið auðkenni vara í körfu');
   }
-
-  const q2 = 'SELECT fjoldivara'
-  
 }
+
