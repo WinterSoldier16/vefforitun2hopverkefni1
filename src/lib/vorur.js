@@ -86,15 +86,15 @@ export async function findVoruByQuery(search) {
 }
 
 export async function findVoruByCatQue(category, search) {
-    const q = `SELECT * FROM VORUR WHERE flokkar LIKE = '$1'
-     AND title OR description LIKE = %$1%
+    const q = `SELECT * FROM VORUR WHERE flokkar = $1
+     AND (title LIKE $2 OR description LIKE $2)
     `
     try {
       const result = await query(q, [category, search]);
   
-      if (result.rowCount === 1) {
-        return result.rows[0];
-      }
+      
+      return result.rows;
+      
     } catch (e) {
       console.error('Gat ekki fundið voru eftir leit');
     } 
@@ -150,11 +150,11 @@ export async function createVoru(title, price, description, image, flokkar) {
 export async function updateVoru(id, title, price, description, image, flokkar) {
     const q = `
     UPDATE vorur 
-    SET title = $2
-    SET price = $3
-    SET description = $4
-    SET image = $5
-    SET flokkar = $6
+    SET title = $2,
+    price = $3,
+    description = $4,
+    image = $5,
+    flokkar = $6
     WHERE id = $1
     `
   
@@ -185,15 +185,23 @@ export async function createCat(title) {
 }
 
 export async function updateCat(id, title) {
-    const q = `
+    const q = 'SELECT title FROM flokkur WHERE id = $1';
+    const q1 = `
     UPDATE vorur 
+    SET flokkar = $2
+    WHERE flokkar = $1
+    `;
+    const q2 = `
+    UPDATE flokkur 
     SET title = $2
     WHERE id = $1
-    `
+    `;
   
     try {
-      const result = await query(q, [id, title]);
-      return result.rows[0];
+      const result = await query(q, [id]);
+      const result1 = await query(q1, [result.rows[0]['title'], title]);
+      const result2 = await query(q2, [id, title]);
+      return result2.rows[0];
     } catch (e) {
       console.error('Gat ekki breytt flokk');
     }

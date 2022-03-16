@@ -13,7 +13,9 @@ import {
     updateVoru,
     createCat,
     updateCat,
-    removeCat
+    removeCat,
+    findVoruByCatQue,
+    removeVoru
 } from './lib/vorur.js';
 
 import { 
@@ -33,8 +35,9 @@ const jwtOptions = {
 export const vRoute = express.Router();
 
 vRoute.get('/menu', async (req, res) => {
-    const category = req.query.category;
     const search = req.query.search;
+    const category = req.query.category;
+    // const search = req.query.search;
     // console.error(category);
     if(category && !search) {
         const listFlokkByCat = await findVoruByCategory(category);
@@ -45,7 +48,7 @@ vRoute.get('/menu', async (req, res) => {
         return res.json({ listFlokkBySearch });
     }
     if(category && search) {
-        const listFlokkBySOgC = await findVoruByCatQue(category, search);
+        const listFlokkBySOgC = await findVoruByCatQue(category, '%' + search + '%');
         return res.json({ listFlokkBySOgC });
     }
     if(!category && !search) {
@@ -111,7 +114,7 @@ vRoute.patch('/categories/:id', requireAuthentication, async (req, res) => {
     const { id } = req.params;
     const { title = '' } = req.body;
     if(req.user.admin === true) {
-        const updateCategory = await updateCat(title);
+        const updateCategory = await updateCat(id, title);
         return res.json({ updateCategory });
     } 
     
