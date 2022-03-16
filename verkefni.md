@@ -52,3 +52,4 @@
 
 ## Vandamál
 [] - formdata eða json, POST /menu
+[] - hvernig á að finna heildarverð í körfu
