@@ -25,6 +25,7 @@ CREATE TABLE vorur (
 
 CREATE TABLE karfa (
   id uuid primary key,
+  price INTEGER,
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
