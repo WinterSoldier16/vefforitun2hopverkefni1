@@ -18,7 +18,7 @@ CREATE TABLE vorur (
   description TEXT NOT NULL,
   image VARCHAR(128) NOT NULL,
   flokkar VARCHAR(32) NOT NULL,
-  constraint flokkar FOREIGN KEY (flokkar) REFERENCES flokkur (title),
+  constraint flokkar FOREIGN KEY (flokkar) REFERENCES flokkur (title) ON UPDATE CASCADE ON DELETE CASCADE,
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -33,8 +33,8 @@ CREATE TABLE linurkorfu (
   idvara INTEGER NOT NULL,
   idkarfa uuid NOT NULL,
   fjoldivara INTEGER CHECK (fjoldivara > 0),
-  constraint idkarfa FOREIGN KEY (idkarfa) REFERENCES karfa (id),
-  constraint idvara FOREIGN KEY (idvara) REFERENCES vorur (id)
+  constraint idkarfa FOREIGN KEY (idkarfa) REFERENCES karfa (id) ON DELETE CASCADE,
+  constraint idvara FOREIGN KEY (idvara) REFERENCES vorur (id) ON DELETE CASCADE
 );
 
 CREATE TABLE pontun (
@@ -48,13 +48,13 @@ CREATE TABLE linurpontun (
   idvara INTEGER NOT NULL,
   idpontun uuid NOT NULL,
   fjvara INTEGER CHECK (fjvara > 0),
-  constraint idvara FOREIGN KEY (idvara) REFERENCES vorur (id),
-  constraint idpontun FOREIGN KEY (idpontun) REFERENCES pontun (id)
+  constraint idvara FOREIGN KEY (idvara) REFERENCES vorur (id) ON DELETE CASCADE,
+  constraint idpontun FOREIGN KEY (idpontun) REFERENCES pontun (id) ON DELETE CASCADE
 );
 
 CREATE TABLE stadapontun (
   idpontun uuid NOT NULL,
   stodurpontunar VARCHAR(8),
-  constraint idpontun FOREIGN KEY (idpontun) REFERENCES pontun (id), 
+  constraint idpontun FOREIGN KEY (idpontun) REFERENCES pontun (id) ON DELETE CASCADE, 
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
