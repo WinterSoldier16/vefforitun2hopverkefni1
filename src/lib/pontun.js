@@ -75,8 +75,7 @@ export async function createPontun(id, name) {
         console.error('Gat ekki búið til pöntun');
       }
     
-      return null;
-    
+      return null;   
 }
 
 export async function findPontunById(id) {
@@ -92,6 +91,7 @@ export async function findPontunById(id) {
           return result.rows[0];
         }
       } catch (e) {
+
         console.error('Gat ekki fundið pontun eftir id');
       }
     
