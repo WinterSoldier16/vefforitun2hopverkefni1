@@ -33,15 +33,15 @@ export async function query(q, values = []) {
 export async function createCart() {
   const q = `
     INSERT INTO
-      karfa (id)
-    VALUES ($1)
+      karfa (id, price)
+    VALUES ($1, $2)
     RETURNING *
   `;
 
   const uuid = uuidv4();
 
   try {
-    const result = await query(q, [uuid]);
+    const result = await query(q, [uuid, 0]);
     return result.rows[0];
   } catch (e) {
     console.error('Gat ekki búið til körfu')
@@ -49,7 +49,10 @@ export async function createCart() {
 }
 
 export async function getCartByID(uuid) {
-  const q = `SELECT * FROM linurkorfu WHERE idkarfa = $1`;
+  const q = `SELECT linurkorfu.idvara, vorur.title, linurkorfu.fjoldivara, karfa.price
+            FROM linurkorfu WHERE idkarfa = $1
+            INNER JOIN vorur ON vorur.id = linurkorfu.idvara
+            INNER JOIN karfa ON karfa.id = linurkorfu.idvara`;
 
   try {
     const result = await query(q, [uuid]);
@@ -66,15 +69,15 @@ export async function getCartTotalPrice(uuid) {
     const vorur = await query(q, [uuid]);
     const q2 = 'SELECT fjoldivara FROM linurkorfu WHERE idkarfa = $1 ORDER BY idvara ASC';
     try {
-      const fjoldi_vara = await query(q2, [uuid]);
-      let total_price = 0;
+      const fjoldiVara = await query(q2, [uuid]);
+      let totalPrice = 0;
       for (let i = 0; i < vorur.rowCount; i++) {
         let voruID = vorur.rows[i];
-        let fjoldi_voru = fjoldi_vara[i];
+        let fjoldiVoru = fjoldiVara[i];
         const q3 = 'SELECT price FROM vorur WHERE id = $1'
         try {
           let price = await query(q3, [voruID])
-          total_price += fjoldi_voru * price.rows[0];
+          totalPrice += fjoldiVoru * price.rows[0];
         } catch (e) {
           console.error('Gat ekki fundið verð á vöru');
         }
@@ -84,6 +87,27 @@ export async function getCartTotalPrice(uuid) {
     }
   } catch (e) {
     console.error('Gat ekki fundið auðkenni vara í körfu');
+  }
+}
+
+export async function addToCart(idVoru, idKorfu, fjoldiVoru) {
+  const q = `INSERT INTO linurkorfu (idvara, idkarfa, fjoldivara)
+            VALUES ($1, $2, $3)`;
+
+  try {
+    const result = await query(q, [idVoru, idKorfu, fjoldiVoru]);
+  } catch (e) {
+    console.error('Gat ekki sett vöru í körfu');
+  }
+
+  const price = getCartTotalPrice(idKorfu);
+  const q2 = `UPDATE karfa
+              SET price = $1
+              WHERE id = $2`;
+  try {
+    const result2 = await query(q, [price, idKorfu]);
+  } catch (e) {
+    console.error('Gat ekki uppfært heildarverð körfu');
   }
 }
 

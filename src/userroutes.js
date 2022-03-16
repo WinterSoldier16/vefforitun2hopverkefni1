@@ -73,7 +73,6 @@ route.post('/users/register', async (req, res) => {
 });
   
 route.get('/users/me', requireAuthentication, async (req, res) => {
-    console.error(req.user.id);
     const audkenni = req.user.id;
     const nafn = req.user.name;
     res.json({ audkenni, nafn });
