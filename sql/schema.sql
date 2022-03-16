@@ -39,6 +39,7 @@ CREATE TABLE linurkorfu (
 
 CREATE TABLE pontun (
   id uuid primary key,
+  price INTEGER NOT NULL,
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   name VARCHAR(64) NOT NULL
 );
