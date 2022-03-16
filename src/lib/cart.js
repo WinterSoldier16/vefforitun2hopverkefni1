@@ -106,8 +106,26 @@ export async function addToCart(idVoru, idKorfu, fjoldiVoru) {
               WHERE id = $2`;
   try {
     const result2 = await query(q, [price, idKorfu]);
+    return result2;
   } catch (e) {
     console.error('Gat ekki uppfært heildarverð körfu');
   }
 }
 
+export async function deleteCart(idKorfu) {
+  const q = `DELETE FROM linurkorfu WHERE idkarfa = $1`;
+  const q2 = 'DELETE FROM karfa WHERE id = $1'
+
+  try {
+    const deleteLine = await query(q, [idKorfu]);
+  } catch (e) {
+    console.error('Gat ekki eytt körfu úr linurkorfu');
+  }
+
+  try {
+    const deleteCart = await query(q, [idKorfu]);
+    return deleteCart;
+  } catch (e) {
+    console.error('Gat ekki eytt körfu úr karfa');
+  }
+}
