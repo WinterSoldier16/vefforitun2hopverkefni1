@@ -14,7 +14,6 @@ pool.on('error', (err) => {
 
 export async function query(q, values = []) {
     const client = await pool.connect();
-  
     let result;
   
     try {
@@ -59,14 +58,13 @@ export async function findVoruById(id) {
 }
 
 export async function findVoruByCategory(category) {
+    console.log(category);
     const q = `SELECT * FROM vorur WHERE flokkar = $1`;
   
     try {
       const result = await query(q, [category]);
-  
-      if (result.rowCount === 1) {
-        return result.rows[0];
-      }
+
+      return result.rows;
     } catch (e) {
       console.error('Gat ekki fundið voru eftir flokki');
     } 
@@ -74,15 +72,13 @@ export async function findVoruByCategory(category) {
 }
 
 export async function findVoruByQuery(search) {
-    const q = `SELECT * FROM VORUR WHERE title LIKE = %$1% 
-    OR description LIKE = %$1%
+    const q = `SELECT * FROM VORUR WHERE title LIKE $1 
+    OR description LIKE $1
     `
     try {
       const result = await query(q, [search]);
   
-      if (result.rowCount === 1) {
-        return result.rows[0];
-      }
+      return result.rows;
     } catch (e) {
       console.error('Gat ekki fundið voru eftir leit');
     } 
@@ -90,7 +86,7 @@ export async function findVoruByQuery(search) {
 }
 
 export async function findVoruByCatQue(category, search) {
-    const q = `SELECT * FROM VORUR WHERE flokkar = $1
+    const q = `SELECT * FROM VORUR WHERE flokkar LIKE = '$1'
      AND title OR description LIKE = %$1%
     `
     try {
@@ -211,4 +207,14 @@ export async function removeVoru(id) {
       } catch (e) {
         console.error('Gat ekki eytt vöru');
       }
+}
+
+export async function removeCat(id) {
+  const q = 'DELETE FROM flokkur WHERE id = $1';
+  try {
+      const result = await query(q, [id]);
+      return result.rows[0];
+    } catch (e) {
+      console.error('Gat ekki eytt vöru');
+    }
 }

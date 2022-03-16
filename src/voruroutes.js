@@ -12,7 +12,8 @@ import {
     createVoru,
     updateVoru,
     createCat,
-    updateCat
+    updateCat,
+    removeCat
 } from './lib/vorur.js';
 
 import { 
@@ -34,13 +35,13 @@ export const vRoute = express.Router();
 vRoute.get('/menu', async (req, res) => {
     const category = req.query.category;
     const search = req.query.search;
-    console.error(category);
+    // console.error(category);
     if(category && !search) {
         const listFlokkByCat = await findVoruByCategory(category);
         return res.json({ listFlokkByCat });
     }
     if(search && !category) {
-        const listFlokkBySearch = await findVoruByQuery(search);
+        const listFlokkBySearch = await findVoruByQuery('%' + search + '%');
         return res.json({ listFlokkBySearch });
     }
     if(category && search) {
@@ -93,4 +94,35 @@ vRoute.delete('/menu/:id', requireAuthentication, async (req, res) => {
 vRoute.get('/categories', async (req, res) => {
     const listAllflokkar = await findAllVorurCat();
     return res.json({ listAllflokkar });
+});
+
+vRoute.post('/categories', requireAuthentication, async (req, res) => {
+    const { title = '' } = req.body;
+    if(req.user.admin === true) {
+        const createdFlokkur = await createCat(title);
+        if(createdFlokkur) {
+            return res.json({ data: 'Flokkur búinn til' });
+        }
+    }
+    return res.status(401).json({ error: 'Need admin priviliges to create new flokkur'});
+});
+
+vRoute.patch('/categories/:id', requireAuthentication, async (req, res) => {
+    const { id } = req.params;
+    const { title = '' } = req.body;
+    if(req.user.admin === true) {
+        const updateCategory = await updateCat(title);
+        return res.json({ updateCategory });
+    } 
+    
+    return res.status(401).json({ error: 'Need admin priviliges to create new flokkur'});
+});
+
+vRoute.delete('/categories/:id', requireAuthentication, async( req, res) => {
+    const { id } = req.params;
+    if(req.user.admin === true) {
+        const removeCat = await removeCat(id);
+        return res.json({ data: 'Flokki var eytt' });
+    }
+    return res.status(401).json({ error: 'Need admin priviliges to delete flokkur'});
 });

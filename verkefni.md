@@ -13,7 +13,7 @@
 [] - Matseðill
 [] - Karfa
 [] - Pöntun
-[] - Notendur
+[x] - Notendur
 
 ## Websocket
 
@@ -30,10 +30,10 @@
 [] - Óauðkenndur notandi getur skoðað matseðil og sett í körfu
 [] - Óauðkenndur notandi getur sett mat af matseðli í körfu og fengið til baka auðkenni fyrir pöntun
 [] - Óauðkenndur notandi getur fylgst með stöðu pöntunar gegnum vefþjónustu og WS
-[] - Stjórnendur geta breytt, bætt við, og eytt efni á matseðli
-[] - JWT með passport og notendur geymdir í gagnagrunni 
-[] - útfæra auðkenningu, nýskráningu og middleware
-[] - útbúa einn stjórnanda, Username : admin og pass : 123
+[x] - Stjórnendur geta breytt, bætt við, og eytt efni á matseðli
+[x] - JWT með passport og notendur geymdir í gagnagrunni 
+[x] - útfæra auðkenningu, nýskráningu og middleware
+[x] - útbúa einn stjórnanda, Username : admin og pass : 123
 
 ## Tæki, tól og test
 
