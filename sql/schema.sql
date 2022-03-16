@@ -44,14 +44,15 @@ CREATE TABLE pontun (
 
 CREATE TABLE linurpontun (
   idvara INTEGER NOT NULL,
-  idkarfa uuid NOT NULL,
+  idpontun uuid NOT NULL,
   fjvara INTEGER CHECK (fjvara > 0),
   constraint idvara FOREIGN KEY (idvara) REFERENCES vorur (id),
-  constraint idkarfa FOREIGN KEY (idkarfa) REFERENCES karfa (id)
+  constraint idpontun FOREIGN KEY (idpontun) REFERENCES pontun (id)
 );
 
 CREATE TABLE stadapontun (
-  id serial primary key,
-  stodurpontunar VARCHAR(8), 
+  idpontun uuid NOT NULL,
+  stodurpontunar VARCHAR(8),
+  constraint idpontun FOREIGN KEY (idpontun) REFERENCES pontun (id), 
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
