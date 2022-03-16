@@ -56,7 +56,7 @@ vRoute.get('/menu', async (req, res) => {
         return res.json({ listAllVorur });
     }
 });
-
+// eftir að laga, fer eftir hvað óli segir
 vRoute.post('/menu', requireAuthentication, async (req, res) => {
     const { title, price, description, image, flokkar  = '' } = req.body;
     if(req.user.admin === true) {
@@ -115,7 +115,7 @@ vRoute.patch('/categories/:id', requireAuthentication, async (req, res) => {
     const { title = '' } = req.body;
     if(req.user.admin === true) {
         const updateCategory = await updateCat(id, title);
-        return res.json({ updateCategory });
+        return res.json({ data: 'Flokki hefur verið breytt' });
     } 
     
     return res.status(401).json({ error: 'Need admin priviliges to create new flokkur'});
@@ -124,7 +124,7 @@ vRoute.patch('/categories/:id', requireAuthentication, async (req, res) => {
 vRoute.delete('/categories/:id', requireAuthentication, async( req, res) => {
     const { id } = req.params;
     if(req.user.admin === true) {
-        const removeCat = await removeCat(id);
+        const removecat = await removeCat(id);
         return res.json({ data: 'Flokki var eytt' });
     }
     return res.status(401).json({ error: 'Need admin priviliges to delete flokkur'});
