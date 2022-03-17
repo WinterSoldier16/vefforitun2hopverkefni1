@@ -1,1 +1,1 @@
-web: npm run setup.js & npm run app.js & wait -n
+web: npm run setup & npm run start & wait -n
