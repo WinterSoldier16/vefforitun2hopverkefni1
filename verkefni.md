@@ -10,9 +10,9 @@
 
 ## Vefþjónustur
 
-[] - Matseðill
-[] - Karfa
-[] - Pöntun
+[/] - Matseðill
+[/] - Karfa
+[/] - Pöntun
 [x] - Notendur
 
 ## Websocket
@@ -27,8 +27,8 @@
 
 ## Notendaumsjón
 
-[] - Óauðkenndur notandi getur skoðað matseðil og sett í körfu
-[] - Óauðkenndur notandi getur sett mat af matseðli í körfu og fengið til baka auðkenni fyrir pöntun
+[x] - Óauðkenndur notandi getur skoðað matseðil og sett í körfu
+[x] - Óauðkenndur notandi getur sett mat af matseðli í körfu og fengið til baka auðkenni fyrir pöntun
 [] - Óauðkenndur notandi getur fylgst með stöðu pöntunar gegnum vefþjónustu og WS
 [x] - Stjórnendur geta breytt, bætt við, og eytt efni á matseðli
 [x] - JWT með passport og notendur geymdir í gagnagrunni 

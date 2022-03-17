@@ -6,7 +6,7 @@ import {
     requireAuthentication,  
 } from './auth/passport.js';
 
-import { createPontun, findAllPontun, findPontunById, findPontunByIdStatus } from './lib/pontun.js';
+import { createPontun, findAllPontun, findPontunById, findPontunByIdStatus, updatePontunIdStatus } from './lib/pontun.js';
 
 
 const {
@@ -21,10 +21,12 @@ const jwtOptions = {
 
 export const pRoute = express.Router();
 
-pRoute.get('/orders', async (req, res) => {
-    const listAllOrders = await findAllPontun();
-
-    return res.json({ listAllOrders });
+pRoute.get('/orders', requireAuthentication, async (req, res) => {
+    if(req.user.admin === true) {
+        const listAllOrders = await findAllPontun();
+        return res.json({ listAllOrders });
+    }
+    return res.status(401).json({ error: 'Need admin priviliges to view orders'});
 });
 
 pRoute.post('/orders', async (req, res) => {
@@ -44,11 +46,20 @@ pRoute.get('/orders/:id', async (req, res) => {
     return res.json({ pontunid });
 });
 
-pRoute.get('orders/:id/status', async (req, res) => {
+pRoute.get('/orders/:id/status', async (req, res) => {
     const { id } = req.params;
-    const status = req.query.status;
 
-    const idstatus = await findPontunByIdStatus(id, status);
+    const idstatus = await findPontunByIdStatus(id);
     return res.json({ idstatus });
 
+});
+
+pRoute.post('/orders/:id/status', requireAuthentication, async (req, res) => {
+    const { id } = req.params;
+
+    if(req.user.admin === true) {
+        const changeStatus = await updatePontunIdStatus(id);
+        return res.json({ changeStatus });
+    }
+    return res.status(401).json({ error: 'Need admin priviliges to update order status'});
 });
