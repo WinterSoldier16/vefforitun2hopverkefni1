@@ -32,7 +32,7 @@ INSERT INTO linurkorfu (idvara, idkarfa, fjoldivara) VALUES (1, 'c7822f33-e836-4
 INSERT INTO linurkorfu (idvara, idkarfa, fjoldivara) VALUES (3, 'c7822f33-e836-4a63-9115-6e7200a7beb2', 2);
 INSERT INTO linurkorfu (idvara, idkarfa, fjoldivara) VALUES (15, 'c7822f33-e836-4a63-9115-6e7200a7beb2', 3);
 
-INSERT INTO pontun (id, price) VALUES ('97df5ad2-9471-4791-ac91-dee447d7afeb', 0);
+INSERT INTO pontun (id, price, name) VALUES ('97df5ad2-9471-4791-ac91-dee447d7afeb', 0, 'test');
 
 INSERT INTO linurpontun (idvara, idpontun, fjvara) VALUES (1, '97df5ad2-9471-4791-ac91-dee447d7afeb', 2);
 INSERT INTO linurpontun (idvara, idpontun, fjvara) VALUES (13, '97df5ad2-9471-4791-ac91-dee447d7afeb', 2);
