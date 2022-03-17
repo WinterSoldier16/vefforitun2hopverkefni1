@@ -154,3 +154,37 @@ export async function findProductInCart(idkarfa, idvara) {
     console.error('Gat ekki fundið upplýsingar um vöru í körfu');
   }
 }
+
+export async function updateLineInCart(idkarfa, idvara, nyrFjoldiVoru) {
+  const q = `UPDATE linurkorfu
+            SET fjoldivara = $1
+            WHERE idkarfa = $2 AND idvara = $3`;
+
+  const q2 = `UPDATE karfa
+            SET price = $1
+            WHERE id = $2`;
+  try {
+    const result = await query(q, [nyrFjoldiVoru, idkarfa, idvara]);
+    const newPrice = await getCartTotalPrice(idkarfa);
+    const result2 = await query(q2, [newPrice, idkarfa]);
+    return "Fjöldi vöru var uppfærður";
+  } catch (e) {
+    console.error('Gat ekki uppfært fjölda vöru í körfu');
+  }
+}
+
+export async function deleteLineInCart(idkarfa, idvara) {
+  const q = `DELETE FROM linurkorfu WHERE idkarfa = $1 AND idvara = $2`;
+  const q2 = `UPDATE karfa
+              SET price = $1
+              WHERE id = $2`;
+
+  try {
+    const result = await query(q, [idkarfa, idvara]);
+    const newPrice = await getCartTotalPrice(idkarfa);
+    const result2 = await query(q2, [newPrice, idkarfa]);
+    return "Vöru var eytt úr körfu";
+  } catch (e) {
+    console.error('Gat ekki eytt vöru úr körfu');
+  }
+}

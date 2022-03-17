@@ -7,6 +7,7 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import { route as userroutes } from './userroutes.js';
 import { vRoute as voruroutes } from './voruroutes.js';
 import { route as cartroutes } from './cartroutes.js';
+import expressWs from 'express-ws';
 
 import {
   comparePasswords,
@@ -30,6 +31,7 @@ if (!jwtSecret || !databaseUrl) {
 }
 
 const app = express();
+expressWs(app);
 
 // Notum JSON middleware til að geta tekið við JSON frá client
 app.use(express.json());
