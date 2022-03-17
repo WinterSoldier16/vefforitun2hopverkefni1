@@ -185,12 +185,7 @@ export async function createCat(title) {
 }
 
 export async function updateCat(id, title) {
-    const q = 'SELECT title FROM flokkur WHERE id = $1';
-    const q1 = `
-    UPDATE vorur 
-    SET flokkar = $2
-    WHERE flokkar = $1
-    `;
+   
     const q2 = `
     UPDATE flokkur 
     SET title = $2
@@ -198,8 +193,6 @@ export async function updateCat(id, title) {
     `;
   
     try {
-      const result = await query(q, [id]);
-      const result1 = await query(q1, [result.rows[0]['title'], title]);
       const result2 = await query(q2, [id, title]);
       return result2.rows[0];
     } catch (e) {
