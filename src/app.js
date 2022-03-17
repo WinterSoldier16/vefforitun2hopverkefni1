@@ -21,6 +21,7 @@ import {
 dotenv.config();
 
 const {
+  HOST: hostname = '127.0.0.1',
   PORT: port = 3000,
   DATABASE_URL: databaseUrl,
   JWT_SECRET: jwtSecret,
@@ -118,5 +119,5 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.info(`Server running at http://localhost:${port}/`);
+  console.info(`Server running at http://${hostname}:${port}/`);
 });
