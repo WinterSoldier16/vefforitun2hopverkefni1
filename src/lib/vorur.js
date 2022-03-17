@@ -129,16 +129,16 @@ export async function findCatById(id) {
     return null;
 }
 
-export async function createVoru(title, price, description, image, flokkar) {
+export async function createVoru(title, price, description, flokkar) {
     const q = `
       INSERT INTO
-        vorur (title, price, description, image, flokkar)
-      VALUES ($1, $2, $3, $4, $5)
+        vorur (title, price, description, flokkar)
+      VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
   
     try {
-      const result = await query(q, [title, price, description, image, flokkar]);
+      const result = await query(q, [title, price, description, flokkar]);
       return result.rows[0];
     } catch (e) {
       console.error('Gat ekki búið til voru');
