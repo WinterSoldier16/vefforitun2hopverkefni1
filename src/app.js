@@ -6,6 +6,7 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 //import passport from './auth/passport.js';
 import { route as userroutes } from './userroutes.js';
 import { vRoute as voruroutes } from './voruroutes.js';
+import { route as cartroutes } from './cartroutes.js';
 
 import {
   comparePasswords,
@@ -34,6 +35,7 @@ const app = express();
 app.use(express.json());
 app.use(userroutes);
 app.use(voruroutes);
+app.use(cartroutes);
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

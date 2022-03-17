@@ -3,7 +3,8 @@ import express from 'express';
 import {
   createCart,
   getCartByID,
-  addToCart
+  addToCart,
+  deleteCart,
 } from './lib/cart.js';
 
 import { 
@@ -13,9 +14,10 @@ import {
 export const route = express.Router();
 
 route.post('/cart', async (req, res) => {
-  const cart = await createCart();
-  if (cart) {
-    return res.json({ cart });
+  const cartID = await createCart();
+  console.log(cartID);
+  if (cartID) {
+    return res.json({ cartID });
   }
   return res.json({ error: "Failed to create cart" });
 });
@@ -30,9 +32,10 @@ route.get('/cart/:cartid', async (req, res) => {
 });
 
 route.post('/cart/:cartid', async (req, res) => {
-  const { cartID } = req.params;
-  const { voruID, fjoldiVoru } = req.body;
-  const cart = await addToCart(voruID, cartID, fjoldiVoru);
+  const { cartid } = req.params;
+  const { idvara, fjoldivara = ''} = req.body;
+  console.log("idVoru: " + idvara);
+  const cart = await addToCart(idvara, cartid, fjoldivara);
   if (cart) {
     return res.json({ cart });
   }
@@ -47,3 +50,4 @@ route.delete('/cart/:cartid', async (req, res) => {
   }
   return res.json({ error: "Failed to delete cart" });
 });
+
