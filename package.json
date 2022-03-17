@@ -25,6 +25,7 @@
   "homepage": "https://github.com/WinterSoldier16/vefforitun2hopverkefni1#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.2",
     "cloudinary": "^1.28.1",
     "dotenv": "^16.0.0",
     "dotenv-cli": "^4.1.1",

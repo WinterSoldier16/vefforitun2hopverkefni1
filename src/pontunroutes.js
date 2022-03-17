@@ -55,10 +55,10 @@ pRoute.get('/orders/:id/status', async (req, res) => {
 });
 
 pRoute.post('/orders/:id/status', requireAuthentication, async (req, res) => {
-    const { uuid } = req.params;
+    const { id } = req.params;
 
     if(req.user.admin === true) {
-        const changeStatus = await updatePontunIdStatus(uuid);
+        const changeStatus = await updatePontunIdStatus(id);
         return res.json({ changeStatus });
     }
     return res.status(401).json({ error: 'Need admin priviliges to update order status'});

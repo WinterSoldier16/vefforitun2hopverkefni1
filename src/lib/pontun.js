@@ -61,13 +61,13 @@ export async function createPontun(id, name) {
     INSERT INTO stadapontun (idpontun, stodurpontunar)
     VALUES ($1, $2)
     `;
-    const q6 = 'SELECT idpontun, stodurpontunar FROM stadapontun WHERE id = $1';
+    const q6 = 'SELECT idpontun, stodurpontunar FROM stadapontun WHERE idpontun = $1';
     try {
         const result = await query(q, [id]);
         const result1 = await query(q1, [id]);
-        const result2 = await query(q2, [result]);
+        const result2 = await query(q2, [result.rows[0]['idvara']]);
         const result3 = await query(q3, [uuid,result1.rows[0]['price'], name]);
-        const result4 = await query(q4, [q, uuid, q2]);
+        const result4 = await query(q4, [result.rows[0]['idvara'], uuid, result2.rows[0]['fjoldivara']]);
         const result5 = await query(q5, [uuid, stada]);
         const finalresult = await query(q6, [uuid]);
         return finalresult.rows[0];
@@ -82,15 +82,14 @@ export async function createPontun(id, name) {
 export async function findPontunById(id) {
     const q = `SELECT p.id, p.price, p.created, p.name, l.idvara, l.fjvara, s.stodurpontunar
      FROM pontun p, linurpontun l, stadapontun s 
-     WHERE id = $1;
+     WHERE p.id = $1 AND l.idpontun = $1 AND s.idpontun = $1
      `;
 
     try {
         const result = await query(q, [id]);
     
-        if (result.rowCount === 1) {
-          return result.rows[0];
-        }
+        return result.rows[0];
+        
       } catch (e) {
 
         console.error('Gat ekki fundið pontun eftir id');
@@ -100,7 +99,7 @@ export async function findPontunById(id) {
 }
 
 export async function findPontunByIdStatus(uuid) {
-    const q = 'SELECT * FROM stadapontun WHERE id = $1';
+    const q = 'SELECT * FROM stadapontun WHERE idpontun = $1';
 
     try {
         const result = await query(q, [uuid]);
@@ -117,7 +116,7 @@ export async function findPontunByIdStatus(uuid) {
 }
 
 export async function updatePontunIdStatus(uuid) {
-    const q = 'SELECT stodurpontunar FROM stadapontun WHERE id = $1';
+    const q = 'SELECT stodurpontunar FROM stadapontun WHERE idpontun = $1';
     const q2 = 'UPDATE stadapontun SET stodurpontunar = $2 WHERE idpontun = $1';
     const stodur = ["NEW", "PREPARE", "COOKING", "READY", "FINISHED"];
     try {
@@ -130,7 +129,8 @@ export async function updatePontunIdStatus(uuid) {
             }
         }
         const result2 = await query(q2, [uuid, nystada]);
-        return result2.rows[0];
+        console.log(result2.rows[0]);
+        return "Staða pöntunar hefur verið uppfærð";
     } catch (e) {
         console.error('Gat ekki uppfært stöðu pontunar');
     }

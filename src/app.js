@@ -34,6 +34,7 @@ const app = express();
 
 // Notum JSON middleware til að geta tekið við JSON frá client
 app.use(express.json());
+app.use(express.urlencoded({ extended: true} ));
 app.use(userroutes);
 app.use(voruroutes);
 app.use(cartroutes);
