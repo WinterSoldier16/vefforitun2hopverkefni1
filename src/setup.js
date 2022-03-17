@@ -1,7 +1,5 @@
 import { readFile } from 'fs/promises';
 import { createSchema, dropSchema, end, query } from './lib/createdb.js';
-import csvParser from 'csv-parser';
-import { listImages, uploadImage } from '../utils/cloudinary.js';
 
 const path = dirname(fileURLToPath(import.meta.url));
 const imageCloudinaryUrl = new Map();
