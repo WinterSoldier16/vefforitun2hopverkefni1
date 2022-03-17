@@ -21,10 +21,12 @@ const jwtOptions = {
 
 export const pRoute = express.Router();
 
-pRoute.get('/orders', async (req, res) => {
-    const listAllOrders = await findAllPontun();
-
-    return res.json({ listAllOrders });
+pRoute.get('/orders', requireAuthentication, async (req, res) => {
+    if(req.user.admin === true) {
+        const listAllOrders = await findAllPontun();
+        return res.json({ listAllOrders });
+    }
+    return res.status(401).json({ error: 'Need admin priviliges to view orders'});
 });
 
 pRoute.post('/orders', async (req, res) => {
@@ -44,11 +46,15 @@ pRoute.get('/orders/:id', async (req, res) => {
     return res.json({ pontunid });
 });
 
-pRoute.get('orders/:id/status', async (req, res) => {
+pRoute.get('/orders/:id/status', async (req, res) => {
     const { id } = req.params;
     const status = req.query.status;
 
     const idstatus = await findPontunByIdStatus(id, status);
     return res.json({ idstatus });
+
+});
+
+pRoute.post('/orders/:id/status', async (req, res) => {
 
 });
