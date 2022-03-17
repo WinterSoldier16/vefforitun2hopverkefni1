@@ -39,11 +39,9 @@ export async function createCart() {
   `;
 
   const uuid = uuidv4();
-  console.log(uuid);
 
   try {
     const result = await query(q, [uuid, 0]);
-    console.log(result.rows[0]);
     return result.rows[0]['id'];
   } catch (e) {
     console.error('Gat ekki búið til körfu')
@@ -51,14 +49,22 @@ export async function createCart() {
 }
 
 export async function getCartByID(uuid) {
-  const q = `SELECT linurkorfu.idvara, vorur.title, linurkorfu.fjoldivara, karfa.price
-            FROM linurkorfu WHERE idkarfa = $1
-            INNER JOIN vorur ON vorur.id = linurkorfu.idvara
-            INNER JOIN karfa ON karfa.id = linurkorfu.idvara`;
+  const q = `SELECT linurkorfu.idvara, vorur.title, linurkorfu.fjoldivara
+            FROM linurkorfu
+            INNER JOIN vorur 
+              ON vorur.id = linurkorfu.idvara AND linurkorfu.idkarfa = $1
+            INNER JOIN karfa 
+              ON karfa.id = linurkorfu.idkarfa AND linurkorfu.idkarfa = $1`;
+
+  const q2 = 'SELECT price FROM karfa WHERE id = $1'
 
   try {
     const result = await query(q, [uuid]);
-    return result;
+    const result2 = await query(q2, [uuid]);
+    const products = result.rows;
+    const price = result2.rows;
+    const cart = { products, price };
+    return cart;
   } catch (e) {
     console.error('Gat ekki fundið línur í körfu');
   }
@@ -124,14 +130,61 @@ export async function deleteCart(idKorfu) {
 
   try {
     const deleteLine = await query(q, [idKorfu]);
+    //return deleteLine;
   } catch (e) {
     console.error('Gat ekki eytt körfu úr linurkorfu');
   }
 
   try {
-    const deleteCart = await query(q, [idKorfu]);
-    return deleteCart;
+    const deleteCart = await query(q2, [idKorfu]);
+    return deleteCart.rows[0];
   } catch (e) {
     console.error('Gat ekki eytt körfu úr karfa');
+  }
+}
+
+export async function findProductInCart(idkarfa, idvara) {
+  const q = `SELECT linurkorfu.fjoldivara, vorur.* FROM linurkorfu, vorur
+            WHERE linurkorfu.idkarfa = $1 AND linurkorfu.idvara = $2
+            AND vorur.id = $2`;
+  try {
+    const result = await query(q, [idkarfa, idvara]);
+    return result.rows;
+  } catch (e) {
+    console.error('Gat ekki fundið upplýsingar um vöru í körfu');
+  }
+}
+
+export async function updateLineInCart(idkarfa, idvara, nyrFjoldiVoru) {
+  const q = `UPDATE linurkorfu
+            SET fjoldivara = $1
+            WHERE idkarfa = $2 AND idvara = $3`;
+
+  const q2 = `UPDATE karfa
+            SET price = $1
+            WHERE id = $2`;
+  try {
+    const result = await query(q, [nyrFjoldiVoru, idkarfa, idvara]);
+    const newPrice = await getCartTotalPrice(idkarfa);
+    const result2 = await query(q2, [newPrice, idkarfa]);
+    return "Fjöldi vöru var uppfærður";
+  } catch (e) {
+    console.error('Gat ekki uppfært fjölda vöru í körfu');
+  }
+}
+
+export async function deleteLineInCart(idkarfa, idvara) {
+  const q = `DELETE FROM linurkorfu WHERE idkarfa = $1 AND idvara = $2`;
+  const q2 = `UPDATE karfa
+              SET price = $1
+              WHERE id = $2`;
+
+  try {
+    const result = await query(q, [idkarfa, idvara]);
+    const newPrice = await getCartTotalPrice(idkarfa);
+    const result2 = await query(q2, [newPrice, idkarfa]);
+    return "Vöru var eytt úr körfu";
+  } catch (e) {
+    console.error('Gat ekki eytt vöru úr körfu');
   }
 }
