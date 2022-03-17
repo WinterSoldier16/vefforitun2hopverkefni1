@@ -38,8 +38,6 @@ export const vRoute = express.Router();
 vRoute.get('/menu', async (req, res) => {
     const search = req.query.search;
     const category = req.query.category;
-    // const search = req.query.search;
-    // console.error(category);
     if(category && !search) {
         const listFlokkByCat = await findVoruByCategory(category);
         return res.json({ listFlokkByCat });
@@ -57,32 +55,18 @@ vRoute.get('/menu', async (req, res) => {
         return res.json({ listAllVorur });
     }
 });
-// eftir að laga, fer eftir hvað óli segir
+// ómögulegt að ná þessu cloudinary án aðstoðar og óli var veikur og gat ekki aðstoðað
 vRoute.post('/menu', requireAuthentication, async (req, res) => {
-    // const { title, price, description, flokkar  = '' } = req.body;
-    const { imagePath } = req.file;
-    let image;
-    if(!req.file) {
-        return res.status(401).json({ error: 'Please upload an image'});
-    }
+    const { title, price, description, flokkar  = '' } = req.body;
+
+
     if(req.user.admin !== true) {
         return res.status(401).json({ error: 'Need admin priviliges to create new vöru'});
     }
-    try {
-        const uploadResult = await uploadImage(imagePath);
-        if(!uploadResult || !uploadResult.secure_url) {
-            throw new Error('no secure_url from cloudinary upload');
-        }
-
-        image = uploadResult.secure_url;
-    } catch (e) {
-        logger.error('Unable to upload file to cloudinary', e);
-        return res.status(500).end();
+    if(!title || !price || !description || !flokkar) {
+        return res.status(401).json({ error: 'Please provide title, price, description and flokkar'});
     }
-    if(!title || !price || !description || !image || !flokkar) {
-        return res.status(401).json({ error: 'Please provide title, price, description , image url and flokkar'});
-    }
-    const nyvara = await createVoru(title, price, description, poster , flokkar);
+    const nyvara = await createVoru(title, price, description, flokkar);
     if(nyvara) {
         return res.json({ data: 'Vara búin til' });
     }
