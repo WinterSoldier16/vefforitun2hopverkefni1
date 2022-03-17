@@ -1,10 +1,6 @@
 import { readFile } from 'fs/promises';
 import { createSchema, dropSchema, end, query } from './lib/createdb.js';
 
-const path = dirname(fileURLToPath(import.meta.url));
-const imageCloudinaryUrl = new Map();
-
-
 async function create() {
     const drop = await dropSchema();
   
