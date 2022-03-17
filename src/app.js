@@ -21,7 +21,6 @@ import {
 dotenv.config();
 
 const {
-  //HOST: hostname = '127.0.0.1',
   PORT: port = 3000,
   DATABASE_URL: databaseUrl,
   JWT_SECRET: jwtSecret,
