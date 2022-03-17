@@ -59,9 +59,12 @@ vRoute.get('/menu', async (req, res) => {
 });
 // eftir að laga, fer eftir hvað óli segir
 vRoute.post('/menu', requireAuthentication, async (req, res) => {
-    const { title, price, description, flokkar  = '' } = req.body;
-    const { path: imagePath } = req.file;
+    // const { title, price, description, flokkar  = '' } = req.body;
+    const { imagePath } = req.file;
     let image;
+    if(!req.file) {
+        return res.status(401).json({ error: 'Please upload an image'});
+    }
     if(req.user.admin !== true) {
         return res.status(401).json({ error: 'Need admin priviliges to create new vöru'});
     }
