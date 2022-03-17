@@ -64,7 +64,7 @@ export async function createPontun(id, name) {
     const q6 = 'SELECT idpontun, stodurpontunar FROM stadapontun WHERE id = $1';
     try {
         const result = await query(q, [id]);
-        const result2 = await query(q2, [q]);
+        const result2 = await query(q2, [result]);
         const result3 = await query(q3, [uuid, name]);
         const result4 = await query(q4, [q, uuid, q2]);
         const result5 = await query(q5, [uuid, stada]);
