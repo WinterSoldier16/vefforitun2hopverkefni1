@@ -23,6 +23,13 @@ npm run test # staðfestir virkni með testum
 * Logga sig inn sem admin og fá token
     * POST http://localhost:3000/users/login
     * { "username": "admin", "password": "123"}
-* 
+* Finna allar vörur
     * GET http://localhost:3000/menu
-    * 
+* Leita að vöru eftir flokki (category)
+    * GET http://localhost:3000/menu?category={category}
+* Leita að vöru þar sem ákveðið search query kemur fyrir í titli eða lýsingu
+    * GET http://localhost:3000/menu?search={query}
+* Hægt að leita bæði eftir flokki og með sérstöku search query á sama tíma
+    * GET http://localhost:3000/menu?category={category}?search={query}
+* Býr til körfu og skilar ID hennar, þarft ekki að vera logged in
+    * POST http://localhost:3000/cart
