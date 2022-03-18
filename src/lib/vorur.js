@@ -147,13 +147,12 @@ export async function createVoru(title, price, description, flokkar) {
     return null;
 }
 
-export async function updateVoru(id, title, price, description, image, flokkar) {
+export async function updateVoru(id, title, price, description, flokkar) {
     const q = `
     UPDATE vorur 
     SET title = $2,
     price = $3,
     description = $4,
-    image = $5,
     flokkar = $6
     WHERE id = $1
     `

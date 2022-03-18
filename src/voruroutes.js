@@ -80,8 +80,14 @@ vRoute.get('/menu/:id', async (req, res) => {
 
 vRoute.patch('/menu/:id', requireAuthentication, async (req, res) => {
     const { id } = req.params;
-    const { title, price, description, image, flokkar = '' } = req.body;
-    const updatevara = await updateVoru(id, title, price, description, image, flokkar);
+    const { title, price, description, flokkar = '' } = req.body;
+    if(req.user.admin !== true) {
+        return res.status(401).json({ error: 'Need admin priviliges to update vöru'});
+    }
+    if(!title || !price || !description || !flokkar) {
+        return res.status(401).json({ error: 'Please provide title, price, description and flokkar'});
+    }
+    const updatevara = await updateVoru(id, title, price, description, flokkar);
     return res.json({ updatevara });
 });
 
